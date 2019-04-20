@@ -1,0 +1,47 @@
+﻿@using MVC_CircloidTemplate.Models;
+@using MVC_CircloidTemplate.App_Classes;
+@model List<Product>
+
+<table  class="table table-striped table-hover">
+	<thead>
+		<tr>
+			<th>Ürün Adı</th>
+			<th>Kategori Adı</th>
+			@*<th>Tedarikçi</th>*@
+			<th>Fiyat</th>
+			@*<th>Stok</th>*@
+			<th>Sepetten Çıkar</th>
+		</tr>
+	</thead>
+	<tbody>
+		@if (Model != null)
+		{
+			foreach (Product prd in Model)
+			{
+
+				<tr>
+					<td>@prd.ProductName</td>
+
+
+					@if (prd.CategoryID == null)
+					{
+						<td></td>
+					}
+					else
+					{
+						<td>
+							<span class="label label-primary">@prd.Category.CategoryName</span>   @*Renklendirmeyi koyu mavi yaptık*@
+
+						</td>
+					}
+					<td>@prd.UnitPrice</td>
+					<td>
+
+						<a href="#" data-id=@prd.ProductID class="btn btn-default sepettenCikar">Sepetten Çıkar</a>
+					</td>
+				</tr>
+			}
+		}
+
+	</tbody>
+</table>

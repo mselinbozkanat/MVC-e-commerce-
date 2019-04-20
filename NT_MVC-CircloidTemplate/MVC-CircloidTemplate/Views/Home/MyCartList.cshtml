@@ -1,0 +1,82 @@
+﻿
+@{
+	ViewBag.Title = "Sepetteki Ürünler";
+}
+@using MVC_CircloidTemplate.Models;
+@using MVC_CircloidTemplate.App_Classes;
+@model List<Product>
+@*Buraya table ekledik. Kodları tables-basic.html dosyasından aldık.*@
+<div class="row">
+	<div class="col-md-12">
+		<div class="block">
+			<div class="block-heading">
+				<div class="main-text h2">
+					Sepetteki Ürünler Sayfası
+				</div>
+				<div class="block-controls">
+
+					<span aria-hidden="true" class="icon icon-arrow-down icon-size-medium block-control-collapse"></span>  @*aşağı doğru açılır kapanır.collapse yapar.*@
+					<a href="/Product/Index" class="btn btn-success rounded">Alışverişe Devam Et</a>
+				</div>
+			</div>
+			<div class="block-content-outer">
+				<div id="sepetlist" class="block-content-inner">
+					
+						
+						@if (Session["CurrentCart"] != null)
+						{
+							UserCart uc = (UserCart)Session["CurrentCart"];
+							@Html.Partial("/Views/Home/PartialCartListView.cshtml", uc.PrdList);
+						}
+				
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+@section scripts{
+	<script src="~/Content/assets/js/required/jquery-1.11.1.min.js"></script>
+	<script>
+		$(".sepettenCikar").click(function () {
+			var id = $(this).attr("data-id");
+			alert("sepetten çıkara girdi");
+			$.ajax({
+				type: "POST",
+				url: "/Home/RemoveFromCart/" + id,
+				success: function (messageRemoveFromCart) {
+					alert(messageRemoveFromCart);
+					//location.reload();
+		
+				$.ajax({
+						type: "GET",
+						url: "/Home/PartialCartListView",
+						success: function (response) {
+							
+								$("#sepetlist").html(response);
+
+							$.ajax({
+								type: "GET",
+								url: "/Product/PartialProductView",
+								success: function (response) {
+									$("#sepet").html(response);
+									//return response;
+									//location.reload();
+								},
+								error: function () {
+									alert("Ürün sayısını getirme sırasında hata oluştu");
+								}
+							});
+						},
+						error: function () {
+							alert("Ürün sayısını getirme sırasında hata oluştu");
+						}
+						});
+				},
+				error: function () {
+					alert("Sepetten çıkarılırken ajax hatası oluştu");
+				}
+			});
+
+			});
+	</script>
+}
